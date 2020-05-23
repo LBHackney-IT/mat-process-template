@@ -1,0 +1,11 @@
+# The people in this file are **not** responsible for reviewing this code.
+# That falls to the people working on it directly. These people are here to
+# explicitly notify them, to keep them informed of what's happening to this
+# repository.
+
+# The default, matching to all changes, overriden by any later rules.
+*             @LBHackney-IT/mat-developers
+
+# We disable these to reduce noise from Dependabot.
+package.json
+package-lock.json

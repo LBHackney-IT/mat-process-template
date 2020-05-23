@@ -1,0 +1,26 @@
+version: 1
+update_configs:
+  - package_manager: docker
+    directory: /
+    update_schedule: daily
+    allowed_updates:
+      - match:
+          dependency_type: all
+          update_type: all
+    ignored_updates:
+      - match:
+          dependency_name: node
+          version_requirement: ">= 13.a"
+
+  - package_manager: javascript
+    directory: /
+    update_schedule: daily
+    allowed_updates:
+      - match:
+          dependency_type: all
+          update_type: all
+    automerged_updates:
+      - match:
+          dependency_type: all
+          update_type: semver:minor
+    version_requirement_updates: increase_versions

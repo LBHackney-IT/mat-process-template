@@ -1,0 +1,8 @@
+.terraform/
+.vscode/
+
+node_modules/
+
+/.next/
+/.next-test/
+/next-env.d.ts

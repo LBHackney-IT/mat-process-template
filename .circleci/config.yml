@@ -1,0 +1,219 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.5.0
+  aws-cli: circleci/aws-cli@0.1.18
+
+commands:
+  deploy-env:
+    description: Deploys a Docker image to ECS
+
+    parameters:
+      cluster-name:
+        type: string
+      service-name:
+        type: string
+      image-tag:
+        type: string
+
+    steps:
+      - run:
+          name: Install ecs-deploy
+          command: sudo pip install ecs-deploy
+
+      - run:
+          name: Deploy image to ECS
+          command: |
+            ecs deploy \
+              --no-deregister \
+              --access-key-id $AWS_ACCESS_KEY_ID \
+              --secret-access-key $AWS_SECRET_ACCESS_KEY \
+              --timeout 1800 \
+              --region $AWS_REGION \
+              <<parameters.cluster-name>> \
+              <<parameters.service-name>> \
+              -t <<parameters.image-tag>>
+          no_output_timeout: 30m
+
+jobs:
+  install-and-test:
+    docker:
+      - image: circleci/node:12.16.3-browsers
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: npm ci
+
+      - run:
+          name: Run tests
+          command: |
+            npm run test:lint
+            npm run test:unit
+            # TODO: Uncomment this.
+            # TEST_BROWSER=chrome npm run test:feature
+          no_output_timeout: 20m
+
+  build:
+    parameters:
+      environment-name:
+        type: string
+      worktray-url:
+        type: string
+      diversity-form-url:
+        type: string
+      feedback-form-url:
+        type: string
+
+    docker:
+      - image: docker:stable-git
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+          name: Build Docker image
+          command: |
+            docker build \
+              --build-arg ENVIRONMENT_NAME="<<parameters.environment-name>>" \
+              --build-arg PROCESS_NAME="TODO" \
+              --build-arg WORKTRAY_URL="<<parameters.worktray-url>>" \
+              --build-arg DIVERSITY_FORM_URL="<<parameters.diversity-form-url>>" \
+              --build-arg FEEDBACK_FORM_URL="<<parameters.feedback-form-url>>" \
+              .
+
+  deploy:
+    parameters:
+      cluster-name:
+        type: string
+      service-name:
+        type: string
+      image-tag:
+        type: string
+
+    docker:
+      - image: circleci/python:3.7
+
+    steps:
+      - deploy-env:
+          cluster-name: <<parameters.cluster-name>>
+          service-name: <<parameters.service-name>>
+          image-tag: <<parameters.image-tag>>
+
+workflows:
+  check:
+    jobs:
+      - install-and-test:
+          name: install-and-test-branch
+          filters:
+            branches:
+              ignore:
+                - development
+                - master
+
+      - build:
+          name: build-image-on-branch
+          requires:
+            - install-and-test-branch
+          environment-name: branch
+          worktray-url: https://work.tray
+          tenancy-url: https://tenancy.management
+          diversity-form-url: https://diversity.form
+          feedback-form-url: https://feedback.form
+
+  check-and-deploy-to-development-and-staging:
+    jobs:
+      - install-and-test:
+          name: install-and-test-development
+          filters:
+            branches:
+              only: development
+
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-to-development
+          requires:
+            - install-and-test-development
+          account-url: AWS_ECR_HOST
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          extra-build-args: |
+            --build-arg ENVIRONMENT_NAME="development" \
+            --build-arg PROCESS_NAME="TODO" \
+            --build-arg WORKTRAY_URL="https://hlbctrial-dev.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
+            --build-arg DIVERSITY_FORM_URL="TODO" \
+            --build-arg FEEDBACK_FORM_URL="TODO" \
+
+          region: AWS_REGION
+          repo: $AWS_ECR_PATH_DEV
+          tag: $CIRCLE_SHA1
+
+      - deploy:
+          name: deploy-to-development
+          requires:
+            - build-and-push-to-development
+          cluster-name: $AWS_CLUSTER_DEV
+          service-name: $AWS_SERVICE_DEV
+          image-tag: $CIRCLE_SHA1
+
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-to-staging
+          requires:
+            - deploy-to-development
+          account-url: AWS_ECR_HOST
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          extra-build-args: |
+            --build-arg ENVIRONMENT_NAME="staging" \
+            --build-arg PROCESS_NAME="TODO" \
+            --build-arg WORKTRAY_URL="https://hlbctrial-tst.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
+            --build-arg DIVERSITY_FORM_URL="TODO" \
+            --build-arg FEEDBACK_FORM_URL="TODO" \
+
+          region: AWS_REGION
+          repo: $AWS_ECR_PATH_STAGING
+          tag: $CIRCLE_SHA1
+
+      - deploy:
+          name: deploy-to-staging
+          requires:
+            - build-and-push-to-staging
+          cluster-name: $AWS_CLUSTER_STAGING
+          service-name: $AWS_SERVICE_STAGING
+          image-tag: $CIRCLE_SHA1
+
+  check-and-deploy-to-production:
+    jobs:
+      - install-and-test:
+          name: install-and-test-master
+          filters:
+            branches:
+              only: master
+
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-to-production
+          requires:
+            - install-and-test-master
+          account-url: AWS_ECR_HOST
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          extra-build-args: |
+            --build-arg ENVIRONMENT_NAME="production" \
+            --build-arg PROCESS_NAME="TODO" \
+            --build-arg WORKTRAY_URL="https://hlbctrial.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
+            --build-arg DIVERSITY_FORM_URL="TODO" \
+            --build-arg FEEDBACK_FORM_URL="TODO" \
+
+          region: AWS_REGION
+          repo: $AWS_ECR_PATH_PRODUCTION
+          tag: $CIRCLE_SHA1
+
+      - deploy:
+          name: deploy-to-production
+          requires:
+            - build-and-push-to-production
+          cluster-name: $AWS_CLUSTER_PRODUCTION
+          service-name: $AWS_SERVICE_PRODUCTION
+          image-tag: $CIRCLE_SHA1
