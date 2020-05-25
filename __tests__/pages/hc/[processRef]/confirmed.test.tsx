@@ -1,6 +1,6 @@
 import React from "react";
 import { create } from "react-test-renderer";
-import ConfirmedPage from "../../../../pages/TODO/[processRef]/confirmed";
+import ConfirmedPage from "../../../../pages/hc/[processRef]/confirmed";
 
 it("renders correctly", () => {
   const component = create(<ConfirmedPage />);
@@ -127,7 +127,7 @@ it("renders correctly", () => {
               <p
                 className="lbh-body"
               >
-                The TODO has been submitted for manager review.
+                The Home Check has been submitted for manager review.
               </p>
             </div>
           </section>

@@ -1,8 +1,8 @@
 Feature: End to end
 
   As a user
-  I want to be able to perform a TODO
-  So that I can TODO
+  I want to be able to perform a Home Check
+  So that I can check a home
 
   Scenario: Performing a check
     When I complete a process

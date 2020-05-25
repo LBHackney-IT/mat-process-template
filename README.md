@@ -2,16 +2,6 @@
 
 ## How to use this template
 
-1. Change the readme heading above to `Manage a Tenancy - <processName>`,
-   replacing `<processName>` with the full name of the process (e.g.
-   `Manage a Tenancy - Tenancy and Household Check`)
-1. Find and replace all `TODO`s in this project
-1. Rename `pages/TODO` to `pages/<basePath>`, `public/TODO` to
-   `public/<basePath>`, and `__tests__/pages/TODO` to
-   `__tests__/pages/<basePath>`, replacing `/<basePath>` in each with the value
-   specified in `config/basePath.js`
-1. Remove this section from the readme
-
 ## Technical overview
 
 This project is built with [TypeScript](https://www.typescriptlang.org/) and
@@ -66,7 +56,7 @@ We use:
    npm run dev
    ```
 
-1. Navigate to [`http://localhost:3000/TODO`](http://localhost:3000/TODO).
+1. Navigate to [`http://localhost:3000/hc`](http://localhost:3000/hc).
 
 1. Make a change, and see the page hot reload.
 

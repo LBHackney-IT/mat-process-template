@@ -21,7 +21,6 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { useAsync } from "react-async-hook";
 import basePath from "../../../config/basePath";
-import processName from "../../../config/processName";
 import { getMatApiData } from "../../../helpers/getMatApiData";
 import { getProcessApiJwt } from "../../../helpers/getProcessApiJwt";
 import { getProcessStage } from "../../../helpers/getProcessStage";
@@ -354,7 +353,7 @@ export const LoadingPage: NextPage = () => {
   );
 
   return (
-    <MainLayout title={PageTitle.Loading} heading={processName}>
+    <MainLayout title={PageTitle.Loading} heading="Home Check">
       {errored && (
         <ErrorMessage>
           Something went wrong. Please try reopening this process from your
