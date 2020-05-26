@@ -54,7 +54,7 @@ module "development" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
+    PROCESS_TYPE_VALUE = "100000052"
     PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "4cgb2c6pqe.execute-api.eu-west-2.amazonaws.com"
@@ -86,7 +86,7 @@ module "staging" {
   source = "github.com/LBHackney-IT/aws-mat-components-per-service-terraform.git//modules/environment/frontend?ref=master"
 
   environment_name = "staging"
-  application_name = "hc"
+  application_name = "Home Check"
 
   security_group_name_prefix = "mat-frontend-sg"
   lb_prefix                  = "hackney-ext-mat-alb"
@@ -104,7 +104,7 @@ module "staging" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
+    PROCESS_TYPE_VALUE = "100000052"
     PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "dg5hz8mgwc.execute-api.eu-west-2.amazonaws.com"
@@ -154,7 +154,7 @@ module "production" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
+    PROCESS_TYPE_VALUE = "100000052"
     PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "n74li4pi4k.execute-api.eu-west-2.amazonaws.com"
