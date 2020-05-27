@@ -143,8 +143,9 @@ workflows:
             --build-arg ENVIRONMENT_NAME="development" \
             --build-arg PROCESS_NAME="hc" \
             --build-arg WORKTRAY_URL="https://hlbctrial-dev.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
-            --build-arg DIVERSITY_FORM_URL="TODO" \
-            --build-arg FEEDBACK_FORM_URL="TODO" \
+            --build-arg DIVERSITY_FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScDI85GMCFl8c02DYGpf_cOxsjD83FNbNFEIWKs4u_HOydhKA/viewform'  \
+            --build-arg FEEDBACK_FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLSdpefefhPQJ9fSu-fX6-Uvyanppp480ZRUNAe5dQAr8F2dexw/viewform"
+            \
 
           region: AWS_REGION
           repo: $AWS_ECR_PATH_DEV
@@ -169,8 +170,9 @@ workflows:
             --build-arg ENVIRONMENT_NAME="staging" \
             --build-arg PROCESS_NAME="hc" \
             --build-arg WORKTRAY_URL="https://hlbctrial-tst.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
-            --build-arg DIVERSITY_FORM_URL="TODO" \
-            --build-arg FEEDBACK_FORM_URL="TODO" \
+            --build-arg DIVERSITY_FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLScDI85GMCFl8c02DYGpf_cOxsjD83FNbNFEIWKs4u_HOydhKA/viewform',  \
+            --build-arg FEEDBACK_FORM_URL=FEEDBACK_FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLSdpefefhPQJ9fSu-fX6-Uvyanppp480ZRUNAe5dQAr8F2dexw/viewform"
+            \
 
           region: AWS_REGION
           repo: $AWS_ECR_PATH_STAGING
@@ -203,8 +205,8 @@ workflows:
             --build-arg ENVIRONMENT_NAME="production" \
             --build-arg PROCESS_NAME="hc" \
             --build-arg WORKTRAY_URL="https://hlbctrial.outsystemsenterprise.com/manageatenancy/OfficerDashboard.aspx" \
-            --build-arg DIVERSITY_FORM_URL="TODO" \
-            --build-arg FEEDBACK_FORM_URL="TODO" \
+            --build-arg DIVERSITY_FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLScDI85GMCFl8c02DYGpf_cOxsjD83FNbNFEIWKs4u_HOydhKA/viewform" \
+            --build-arg FEEDBACK_FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLSdpefefhPQJ9fSu-fX6-Uvyanppp480ZRUNAe5dQAr8F2dexw/viewform"\
 
           region: AWS_REGION
           repo: $AWS_ECR_PATH_PRODUCTION
