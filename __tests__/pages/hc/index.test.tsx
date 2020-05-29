@@ -2,7 +2,7 @@ import isOnline from "is-online";
 import * as router from "next/router";
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
-import IndexPage from "../../../pages/TODO/index";
+import IndexPage from "../../../pages/hc/index";
 import { promiseToWaitForNextTick } from "../../helpers/promiseToWaitForNextTick";
 
 jest.mock("is-online");
@@ -35,8 +35,8 @@ it("redirects to the loading page when online", async () => {
 
   expect(routerReplaceMock).toHaveBeenCalledTimes(1);
   expect(routerReplaceMock).toHaveBeenCalledWith(
-    { pathname: "/TODO/[processRef]/loading" },
-    { pathname: "/TODO/test-process-ref/loading" }
+    { pathname: "/hc/[processRef]/loading" },
+    { pathname: "/hc/test-process-ref/loading" }
   );
 });
 
@@ -162,7 +162,7 @@ it("renders correctly when offline", async () => {
             <h1
               className="lbh-heading-h1"
             >
-              TODO
+              Home Check
             </h1>
           </div>
           <p

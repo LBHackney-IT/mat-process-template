@@ -18,7 +18,7 @@ const testAccessibility = (
 
     then("the page should have a descriptive title", async () => {
       await expect(browser!.getTitle()).resolves.toEqual(
-        `${pageTitle} - TODO - Manage a tenancy`
+        `${pageTitle} - Home Check - Manage a tenancy`
       );
     });
   });
@@ -34,7 +34,7 @@ defineFeature(loadFeature("./accessibility.feature"), (test) => {
 
     then("the page should have a descriptive title", async () => {
       await expect(browser!.getTitle()).resolves.toEqual(
-        "Loading - TODO - Manage a tenancy"
+        "Loading - Home Check - Manage a tenancy"
       );
     });
   });
@@ -47,7 +47,7 @@ defineFeature(loadFeature("./accessibility.feature"), (test) => {
 
     then("the page should have a descriptive title", async () => {
       await expect(browser!.getTitle()).resolves.toEqual(
-        "Loading - TODO - Manage a tenancy"
+        "Loading - Home Check - Manage a tenancy"
       );
     });
   });

@@ -1,2 +1,2 @@
 /* eslint-env node */
-module.exports = "TODO";
+module.exports = "hc";

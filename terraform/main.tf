@@ -12,7 +12,7 @@ terraform {
     bucket  = "hackney-mat-state-storage-s3"
     encrypt = true
     region  = "eu-west-2"
-    key     = "services/TODO/state"
+    key     = "services/hc/state"
   }
 }
 
@@ -36,7 +36,7 @@ module "development" {
   source = "github.com/LBHackney-IT/aws-mat-components-per-service-terraform.git//modules/environment/frontend?ref=master"
 
   environment_name = "development"
-  application_name = "TODO"
+  application_name = "hc"
 
   security_group_name_prefix = "mat-frontend-sg"
   lb_prefix                  = "hackney-ext-mat-alb"
@@ -46,7 +46,7 @@ module "development" {
   port = 2001
 
   listener_port = 80
-  path_pattern  = "/TODO*"
+  path_pattern  = "/hc*"
 
   desired_number_of_ec2_nodes = 2
 
@@ -54,8 +54,8 @@ module "development" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
-    PROCESS_TYPE_NAME  = "TODO"
+    PROCESS_TYPE_VALUE = "100000152"
+    PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "4cgb2c6pqe.execute-api.eu-west-2.amazonaws.com"
     PROCESS_API_BASE_URL = "/development/mat-process/api"
@@ -67,15 +67,15 @@ module "development" {
   task_definition_environment_variable_count = 6
 
   task_definition_secrets = {
-    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/development-TODO-PROCESS_API_JWT_SECRET"
-    PROCESS_API_KEY         = "${local.parameter_store}/development-TODO-PROCESS_API_KEY"
-    MAT_API_JWT_SECRET      = "${local.parameter_store}/development-TODO-MAT_API_JWT_SECRET"
-    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/development-TODO-MAT_API_DATA_SHARED_KEY"
-    MAT_API_DATA_SALT       = "${local.parameter_store}/development-TODO-MAT_API_DATA_SALT"
-    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/development-TODO-MAT_API_DATA_ITERATIONS"
-    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/development-TODO-MAT_API_DATA_KEY_SIZE"
-    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/development-TODO-MAT_API_DATA_ALGORITHM"
-    MAT_API_DATA_IV         = "${local.parameter_store}/development-TODO-MAT_API_DATA_IV"
+    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/development-hc-PROCESS_API_JWT_SECRET"
+    PROCESS_API_KEY         = "${local.parameter_store}/development-hc-PROCESS_API_KEY"
+    MAT_API_JWT_SECRET      = "${local.parameter_store}/development-hc-MAT_API_JWT_SECRET"
+    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/development-hc-MAT_API_DATA_SHARED_KEY"
+    MAT_API_DATA_SALT       = "${local.parameter_store}/development-hc-MAT_API_DATA_SALT"
+    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/development-hc-MAT_API_DATA_ITERATIONS"
+    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/development-hc-MAT_API_DATA_KEY_SIZE"
+    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/development-hc-MAT_API_DATA_ALGORITHM"
+    MAT_API_DATA_IV         = "${local.parameter_store}/development-hc-MAT_API_DATA_IV"
   }
 
   task_definition_secret_count = 9
@@ -86,7 +86,7 @@ module "staging" {
   source = "github.com/LBHackney-IT/aws-mat-components-per-service-terraform.git//modules/environment/frontend?ref=master"
 
   environment_name = "staging"
-  application_name = "TODO"
+  application_name = "hc"
 
   security_group_name_prefix = "mat-frontend-sg"
   lb_prefix                  = "hackney-ext-mat-alb"
@@ -96,7 +96,7 @@ module "staging" {
   port = 2002
 
   listener_port = 80
-  path_pattern  = "/TODO*"
+  path_pattern  = "/hc*"
 
   desired_number_of_ec2_nodes = 2
 
@@ -104,8 +104,8 @@ module "staging" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
-    PROCESS_TYPE_NAME  = "TODO"
+    PROCESS_TYPE_VALUE = "100000152"
+    PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "dg5hz8mgwc.execute-api.eu-west-2.amazonaws.com"
     PROCESS_API_BASE_URL = "/staging/mat-process/api"
@@ -117,15 +117,15 @@ module "staging" {
   task_definition_environment_variable_count = 6
 
   task_definition_secrets = {
-    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/staging-TODO-PROCESS_API_JWT_SECRET"
-    PROCESS_API_KEY         = "${local.parameter_store}/staging-TODO-PROCESS_API_KEY"
-    MAT_API_JWT_SECRET      = "${local.parameter_store}/staging-TODO-MAT_API_JWT_SECRET"
-    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/staging-TODO-MAT_API_DATA_SHARED_KEY"
-    MAT_API_DATA_SALT       = "${local.parameter_store}/staging-TODO-MAT_API_DATA_SALT"
-    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/staging-TODO-MAT_API_DATA_ITERATIONS"
-    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/staging-TODO-MAT_API_DATA_KEY_SIZE"
-    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/staging-TODO-MAT_API_DATA_ALGORITHM"
-    MAT_API_DATA_IV         = "${local.parameter_store}/staging-TODO-MAT_API_DATA_IV"
+    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/staging-hc-PROCESS_API_JWT_SECRET"
+    PROCESS_API_KEY         = "${local.parameter_store}/staging-hc-PROCESS_API_KEY"
+    MAT_API_JWT_SECRET      = "${local.parameter_store}/staging-hc-MAT_API_JWT_SECRET"
+    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/staging-hc-MAT_API_DATA_SHARED_KEY"
+    MAT_API_DATA_SALT       = "${local.parameter_store}/staging-hc-MAT_API_DATA_SALT"
+    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/staging-hc-MAT_API_DATA_ITERATIONS"
+    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/staging-hc-MAT_API_DATA_KEY_SIZE"
+    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/staging-hc-MAT_API_DATA_ALGORITHM"
+    MAT_API_DATA_IV         = "${local.parameter_store}/staging-hc-MAT_API_DATA_IV"
   }
 
   task_definition_secret_count = 9
@@ -136,7 +136,7 @@ module "production" {
   source = "github.com/LBHackney-IT/aws-mat-components-per-service-terraform.git//modules/environment/frontend?ref=master"
 
   environment_name = "production"
-  application_name = "TODO"
+  application_name = "hc"
 
   security_group_name_prefix = "mat-frontend-sg"
   lb_prefix                  = "hackney-ext-mat-alb"
@@ -146,7 +146,7 @@ module "production" {
   port = 2000
 
   listener_port = 80
-  path_pattern  = "/TODO*"
+  path_pattern  = "/hc*"
 
   desired_number_of_ec2_nodes = 2
 
@@ -154,8 +154,8 @@ module "production" {
   lb_iam_role_arn    = "${data.aws_iam_role.ec2_container_service_role.arn}"
 
   task_definition_environment_variables = {
-    PROCESS_TYPE_VALUE = "TODO"
-    PROCESS_TYPE_NAME  = "TODO"
+    PROCESS_TYPE_VALUE = "100000152"
+    PROCESS_TYPE_NAME  = "Home Check"
 
     PROCESS_API_HOST     = "n74li4pi4k.execute-api.eu-west-2.amazonaws.com"
     PROCESS_API_BASE_URL = "/production/mat-process/api"
@@ -167,15 +167,15 @@ module "production" {
   task_definition_environment_variable_count = 6
 
   task_definition_secrets = {
-    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/production-TODO-PROCESS_API_JWT_SECRET"
-    PROCESS_API_KEY         = "${local.parameter_store}/production-TODO-PROCESS_API_KEY"
-    MAT_API_JWT_SECRET      = "${local.parameter_store}/production-TODO-MAT_API_JWT_SECRET"
-    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/production-TODO-MAT_API_DATA_SHARED_KEY"
-    MAT_API_DATA_SALT       = "${local.parameter_store}/production-TODO-MAT_API_DATA_SALT"
-    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/production-TODO-MAT_API_DATA_ITERATIONS"
-    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/production-TODO-MAT_API_DATA_KEY_SIZE"
-    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/production-TODO-MAT_API_DATA_ALGORITHM"
-    MAT_API_DATA_IV         = "${local.parameter_store}/production-TODO-MAT_API_DATA_IV"
+    PROCESS_API_JWT_SECRET  = "${local.parameter_store}/production-hc-PROCESS_API_JWT_SECRET"
+    PROCESS_API_KEY         = "${local.parameter_store}/production-hc-PROCESS_API_KEY"
+    MAT_API_JWT_SECRET      = "${local.parameter_store}/production-hc-MAT_API_JWT_SECRET"
+    MAT_API_DATA_SHARED_KEY = "${local.parameter_store}/production-hc-MAT_API_DATA_SHARED_KEY"
+    MAT_API_DATA_SALT       = "${local.parameter_store}/production-hc-MAT_API_DATA_SALT"
+    MAT_API_DATA_ITERATIONS = "${local.parameter_store}/production-hc-MAT_API_DATA_ITERATIONS"
+    MAT_API_DATA_KEY_SIZE   = "${local.parameter_store}/production-hc-MAT_API_DATA_KEY_SIZE"
+    MAT_API_DATA_ALGORITHM  = "${local.parameter_store}/production-hc-MAT_API_DATA_ALGORITHM"
+    MAT_API_DATA_IV         = "${local.parameter_store}/production-hc-MAT_API_DATA_IV"
   }
 
   task_definition_secret_count = 9

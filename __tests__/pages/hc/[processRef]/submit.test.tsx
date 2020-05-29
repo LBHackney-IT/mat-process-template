@@ -1,153 +1,23 @@
-import * as router from "next/router";
+import isOnline from "is-online";
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
-import basePath from "../../../../config/basePath";
-import LoadingPage from "../../../../pages/TODO/[processRef]/loading";
-import { databaseSchemaVersion } from "../../../../storage/databaseSchemaVersion";
-import { processStoreNames } from "../../../../storage/ProcessDatabaseSchema";
-import { Storage } from "../../../../storage/Storage";
+import SubmitPage from "../../../../pages/TODO/[processRef]/submit";
 import { promiseToWaitForNextTick } from "../../../helpers/promiseToWaitForNextTick";
-import { spyOnConsoleError } from "../../../helpers/spyOnConsoleError";
 
-const originalExternalContext = Storage.ExternalContext;
-const originalProcessContext = Storage.ProcessContext;
+jest.mock("is-online");
 
-beforeEach(() => {
-  sessionStorage.setItem(
-    `${basePath}/test-process-ref:processApiJwt`,
-    "test-process-api-jwt"
-  );
-  sessionStorage.setItem(
-    `${basePath}/test-process-ref:matApiJwt`,
-    "test-mat-api-jwt"
-  );
-  sessionStorage.setItem(
-    `${basePath}/test-process-ref:matApiData`,
-    "test-mat-api-data"
-  );
-
-  Storage.ExternalContext = {
-    ...jest.fn()(),
-    database: {
-      ...jest.fn()(),
-      put: jest.fn(),
-    },
-  };
-
-  Storage.ProcessContext = {
-    ...jest.fn()(),
-    database: {
-      ...jest.fn()(),
-      db: { version: databaseSchemaVersion },
-      get: (): undefined => undefined,
-      put: jest.fn(),
-      transaction: async (_, tx): Promise<void> => {
-        await tx(
-          processStoreNames.reduce(
-            (stores, storeName) => ({
-              ...stores,
-              [storeName]: {
-                ...jest.fn()(),
-                put: jest.fn(),
-                delete: jest.fn(),
-              },
-            }),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            {} as any
-          )
-        );
-      },
-    },
-  };
-
-  jest.spyOn(router, "useRouter").mockImplementation(() => ({
-    ...jest.fn()(),
-    query: { processRef: "test-process-ref" },
-  }));
-});
-
-afterEach(() => {
-  sessionStorage.clear();
-
-  Storage.ExternalContext = originalExternalContext;
-  Storage.ProcessContext = originalProcessContext;
-});
+const isOnlineMock = (isOnline as unknown) as jest.MockInstance<
+  Promise<boolean>,
+  [isOnline.Options?]
+>;
 
 it("renders correctly when online", async () => {
-  fetchMock.mockResponse(
-    ({ method, url }): Promise<string> => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let body: any = {};
-
-      if (
-        url.includes("/api/v1/processes") &&
-        url.includes("/images/") &&
-        method === "GET"
-      ) {
-        body = {
-          base64Image: "data:image/jpeg;base64,someimagedata",
-        };
-      } else if (url.includes("/api/v1/processes") && method === "GET") {
-        body = {
-          processData: {
-            dateCreated: new Date(2019, 1),
-            dateLastModified: new Date(2019, 3),
-            dataSchemaVersion: 0,
-            processData: {
-              property: {
-                outside: {
-                  images: ["image:imageid.jpeg"],
-                },
-              },
-            },
-          },
-        };
-      } else if (url.includes("/api/v1/tenancies") && method === "GET") {
-        body = {
-          results: {
-            tenuretype: "Secure",
-            tenancyStartDate: "2019-01-01",
-          },
-        };
-      } else if (url.includes("/api/v1/residents") && method === "GET") {
-        body = {
-          results: [
-            {
-              fullAddressDisplay:
-                "FLAT 1\r\n1 TEST STREET\r\nTEST TOWN TT1 1TT",
-              responsible: true,
-              fullName: "TestTenant1",
-            },
-            {
-              fullAddressDisplay:
-                "FLAT 1\r\n1 TEST STREET\r\nTEST TOWN TT1 1TT",
-              responsible: true,
-              fullName: "TestTenant2",
-            },
-            {
-              fullAddressDisplay:
-                "FLAT 1\r\n1 TEST STREET\r\nTEST TOWN TT1 1TT",
-              responsible: false,
-              fullName: "TestHouseholdMember1",
-            },
-            {
-              fullAddressDisplay:
-                "FLAT 1\r\n1 TEST STREET\r\nTEST TOWN TT1 1TT",
-              responsible: false,
-              fullName: "TestHouseholdMember2",
-            },
-          ],
-        };
-      }
-
-      return Promise.resolve(JSON.stringify(body));
-    }
-  );
+  isOnlineMock.mockResolvedValue(true);
 
   let component: ReactTestRenderer | undefined = undefined;
 
   await act(async () => {
-    component = create(<LoadingPage />);
+    component = create(<SubmitPage />);
 
     await promiseToWaitForNextTick();
   });
@@ -259,48 +129,76 @@ it("renders correctly when online", async () => {
           </div>
           <div
             className="heading"
+          />
+          <section
+            className="lbh-page-announcement"
           >
-            <h1
-              className="lbh-heading-h1"
+            <h3
+              className="lbh-page-announcement__title"
             >
-              TODO
-            </h1>
-          </div>
-          <h2
-            className="lbh-heading-h2"
-          >
-            Loading
-          </h2>
-          <p
-            className="lbh-body"
-          >
-            The system is fetching the information you need for this process.
-          </p>
-          <label
-            className="jsx-1951065838 govuk-label lbh-label"
-          >
-            Ready (updated)
+              Process submission pending
+            </h3>
             <div
-              className="jsx-1951065838"
+              className="lbh-page-announcement__content"
             >
-              <div
-                className="jsx-1951065838"
-                style={
-                  Object {
-                    "width": "100%",
-                  }
-                }
-              />
+              <p
+                className="lbh-body"
+              >
+                You are online.
+              </p>
+              <p
+                className="lbh-body"
+              >
+                The 
+                Home Check
+                 has been saved to your device ready to be sent
+                 
+                to your manager for review.
+              </p>
+              <p
+                className="lbh-body"
+              >
+                <strong>
+                  You need to be online on this device to continue.
+                </strong>
+              </p>
+              <p
+                className="lbh-body"
+              >
+                If you can't go online now, when you are next online
+                 
+                <strong>
+                  on this device
+                </strong>
+                , please come back to this
+                 
+                Home Check
+                 from your work tray and click on the ‘Save and submit
+                 to manager
+                ’ button below that will become able to be clicked.
+              </p>
+              <p
+                className="lbh-body"
+              >
+                <strong>
+                  You are online
+                </strong>
+                , and can submit this 
+                Home Check
+                 
+                to your manager now.
+              </p>
             </div>
-          </label>
+          </section>
           <button
             aria-disabled={false}
             className="govuk-button lbh-button"
+            data-prevent-double-click={true}
             data-testid="submit"
             disabled={false}
             onClick={[Function]}
           >
-            Go
+            Save and submit to manager
           </button>
         </div>
       </main>,
@@ -332,45 +230,15 @@ it("renders correctly when online", async () => {
 });
 
 it("renders correctly when offline", async () => {
-  fetchMock.mockReject(new Error("Request timed out"));
-
-  const consoleErrorSpy = spyOnConsoleError();
+  isOnlineMock.mockResolvedValue(false);
 
   let component: ReactTestRenderer | undefined = undefined;
 
   await act(async () => {
-    component = create(<LoadingPage />);
+    component = create(<SubmitPage />);
 
     await promiseToWaitForNextTick();
   });
-
-  expect(consoleErrorSpy.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-      Array [
-        [Error: Request timed out],
-      ],
-    ]
-  `);
-
-  consoleErrorSpy.mockRestore();
 
   expect(component).toMatchInlineSnapshot(`
     Array [
@@ -479,59 +347,65 @@ it("renders correctly when offline", async () => {
           </div>
           <div
             className="heading"
+          />
+          <section
+            className="lbh-page-announcement"
           >
-            <h1
-              className="lbh-heading-h1"
+            <h3
+              className="lbh-page-announcement__title"
             >
-              TODO
-            </h1>
-          </div>
-          <span
-            className="govuk-error-message lbh-error-message"
-          >
-            <span
-              className="govuk-visually-hidden"
-            >
-              Error
-              :
-            </span>
-            Something went wrong. Please try reopening this process from your worktray.
-          </span>
-          <h2
-            className="lbh-heading-h2"
-          >
-            Loading
-          </h2>
-          <p
-            className="lbh-body"
-          >
-            The system is fetching the information you need for this process.
-          </p>
-          <label
-            className="jsx-1951065838 govuk-label lbh-label"
-          >
-            Error
+              Process submission pending
+            </h3>
             <div
-              className="jsx-1951065838"
+              className="lbh-page-announcement__content"
             >
-              <div
-                className="jsx-1951065838"
-                style={
-                  Object {
-                    "width": "60%",
-                  }
-                }
-              />
+              <p
+                className="lbh-body"
+              >
+                You are currently working offline.
+              </p>
+              <p
+                className="lbh-body"
+              >
+                The 
+                Home Check
+                 has been saved to your device ready to be sent
+                 
+                to your manager for review.
+              </p>
+              <p
+                className="lbh-body"
+              >
+                <strong>
+                  You need to be online on this device to continue.
+                </strong>
+              </p>
+              <p
+                className="lbh-body"
+              >
+                If you can't go online now, when you are next online
+                 
+                <strong>
+                  on this device
+                </strong>
+                , please come back to this
+                 
+                Home Check
+                 from your work tray and click on the ‘Save and submit
+                 to manager
+                ’ button below that will become able to be clicked.
+              </p>
             </div>
-          </label>
+          </section>
           <button
             aria-disabled={true}
             className="govuk-button lbh-button"
+            data-prevent-double-click={true}
             data-testid="submit"
             disabled={true}
             onClick={[Function]}
           >
-            Loading...
+            Waiting for connectivity...
           </button>
         </div>
       </main>,

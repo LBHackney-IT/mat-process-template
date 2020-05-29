@@ -104,7 +104,7 @@ export const IndexPage: NextPage = () => {
   }
 
   return (
-    <MainLayout title={PageTitle.Index} heading="TODO">
+    <MainLayout title={PageTitle.Index} heading="Home Check">
       {content}
     </MainLayout>
   );

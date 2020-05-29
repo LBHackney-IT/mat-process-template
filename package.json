@@ -1,5 +1,5 @@
 {
-  "name": "mat-process-TODO",
+  "name": "mat-process-hc",
   "private": true,
   "scripts": {
     "next": "next",
@@ -15,7 +15,7 @@
     "test:unit:watch": "npm run test:unit -- --watch",
     "test:feature": "PORT=3001 concurrently --names 'server,test' 'npm run test:feature:server' 'npm run test:feature:run' --kill-others --success first",
     "test:feature:update": "PORT=3001 concurrently --names 'server,test' 'npm run test:feature:server' 'npm run test:feature:run -- --updateSnapshot' --kill-others --success first",
-    "test:feature:server": "export NEXT_DIST_DIR=.next-test && export DISABLE_MAT_PROCESS_ACTIONS=1 && export ENVIRONMENT_NAME=test && export PROCESS_NAME=TODO && export WORKTRAY_URL=https://work.tray && export DIVERSITY_FORM_URL=https://diversity.form && export FEEDBACK_FORM_URL=https://feedback.form && npm run build && npm start",
+    "test:feature:server": "export NEXT_DIST_DIR=.next-test && export DISABLE_MAT_PROCESS_ACTIONS=1 && export ENVIRONMENT_NAME=test && export PROCESS_NAME=hc && export WORKTRAY_URL=https://work.tray && export DIVERSITY_FORM_URL=https://diversity.form && export FEEDBACK_FORM_URL=https://feedback.form && npm run build && npm start",
     "test:feature:run": "wait-for-localhost ${PORT:-3000} && jest --config jest.config.feature.js --runInBand",
     "lint": "eslint --report-unused-disable-directives --config ./.eslintrc.full.js '**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "npm run lint -- --fix",
