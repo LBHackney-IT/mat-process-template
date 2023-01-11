@@ -30,7 +30,7 @@
     "date-fns": "^2.14.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lbh-frontend-react": "0.0.14",
     "lodash": "^4.17.15",
     "next": "9.4.2",
